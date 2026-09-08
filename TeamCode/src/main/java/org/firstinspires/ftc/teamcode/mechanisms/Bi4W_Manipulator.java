@@ -82,7 +82,8 @@ public class Bi4W_Manipulator {
     public void controlLift(double control, Telemetry telemetry) {
         if ((control < 0.05) && (control > -0.05)) {  //no active input
             // No trigger: HOLD position
-            liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftMotor.setPower(0.2);
             liftMotor.setTargetPosition(liftMotor.getCurrentPosition());
         } else {
             if (control < -0.05) {
