@@ -25,6 +25,7 @@ public class Bi4W_TeleOp_Solo extends OpMode {
                 new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
 
         imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+        servo.init(hardwareMap);
 
         manipulator.init(hardwareMap);
     }
@@ -54,16 +55,17 @@ public class Bi4W_TeleOp_Solo extends OpMode {
 
         manipulator.setIntakeSpeed(gamepad1.right_trigger);
 
-        telemetry.addData("Intake speed", gamepad1.right_bumper);
+        telemetry.addData("Intake speed", gamepad1.right_trigger);
 
-        double armControl = gamepad1.right_trigger - gamepad1.left_trigger;
-        manipulator.controlLift(armControl, telemetry);
+        manipulator.controlLift(gamepad1.left_trigger, telemetry);
 
         if (gamepad1.a) {
             servo.setServoPosition(0.5);
+            telemetry.addData("Servo:", "true");
         }
         else{
             servo.setServoPosition(0.0);
+            telemetry.addData("Servo:", "false");
         }
 
 
