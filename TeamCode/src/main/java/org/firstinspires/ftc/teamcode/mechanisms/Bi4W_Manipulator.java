@@ -12,9 +12,9 @@ public class Bi4W_Manipulator {
     private int MIN_TICKS = 0;
     private static int MAX_TICKS = 3000;
     private double NUDGE_POWER = 0.5;
-    private double RUN_TO_POSITION_POWER = 0.75;
+    private double RUN_TO_POSITION_POWER = 0.98;
     private DcMotorEx liftMotor;
-    private int targetLiftTicks = 0;
+    public int targetLiftTicks = 0;
 
     public void init(HardwareMap hwMap) {
         intake = hwMap.get(DcMotor.class, "intake");

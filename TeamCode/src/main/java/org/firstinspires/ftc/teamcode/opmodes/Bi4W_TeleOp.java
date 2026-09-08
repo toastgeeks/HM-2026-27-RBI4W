@@ -68,6 +68,13 @@ public class Bi4W_TeleOp extends OpMode {
             servo.setServoPosition(0.0);
         }
 
+        if (manipulator.targetLiftTicks > 20) {
+            drive.maxSpeed = 0.25;
+        }
+        else {
+            drive.maxSpeed = 1;
+        }
+
 
     }
 

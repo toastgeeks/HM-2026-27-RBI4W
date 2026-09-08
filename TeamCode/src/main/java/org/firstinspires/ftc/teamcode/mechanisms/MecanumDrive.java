@@ -12,7 +12,7 @@ public class MecanumDrive {
     private DcMotor fright;
     private DcMotor bleft;
     private DcMotor bright;
-
+    public double maxSpeed = 1.0;
     public MecanumDrive(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
@@ -38,7 +38,6 @@ public class MecanumDrive {
     }
 
     private void setPowers(double fleftPower, double frightPower, double bleftPower, double brightPower) {
-        double maxSpeed = 1.0;
         maxSpeed = Math.max(maxSpeed, Math.abs(fleftPower));
         maxSpeed = Math.max(maxSpeed, Math.abs(frightPower));
         maxSpeed = Math.max(maxSpeed, Math.abs(bleftPower));
