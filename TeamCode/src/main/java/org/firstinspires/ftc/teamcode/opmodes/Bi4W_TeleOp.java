@@ -26,6 +26,7 @@ public class Bi4W_TeleOp extends OpMode {
                 new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
 
         imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+        servo.init(hardwareMap);
 
         manipulator.init(hardwareMap);
     }
