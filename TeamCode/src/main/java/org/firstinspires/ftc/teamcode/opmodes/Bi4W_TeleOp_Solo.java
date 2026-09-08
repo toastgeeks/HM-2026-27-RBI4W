@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator;
+import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator_solo;
 import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_servo;
 import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 
 @TeleOp()
 public class Bi4W_TeleOp_Solo extends OpMode {
     MecanumDrive drive = new MecanumDrive(telemetry);
-    Bi4W_Manipulator manipulator = new Bi4W_Manipulator();
+    Bi4W_Manipulator_solo manipulator = new Bi4W_Manipulator_solo();
     Bi4W_servo servo = new Bi4W_servo();
     IMU imu;
 
@@ -52,7 +52,7 @@ public class Bi4W_TeleOp_Solo extends OpMode {
 
         driveFieldRelative(forward, right, rotate);
 
-        manipulator.setIntakeSpeed(gamepad1.right_trigger);
+        manipulator.setIntakeSpeed(gamepad1.right_bumper);
 
         telemetry.addData("Intake speed", gamepad1.right_bumper);
 
