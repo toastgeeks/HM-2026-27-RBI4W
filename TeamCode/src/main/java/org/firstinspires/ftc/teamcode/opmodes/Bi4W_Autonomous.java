@@ -1,114 +1,101 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.IMU;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.mechanisms.newMecanumDrive;
+import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator;
 
-@Autonomous(name = "Bi4W Auto")
+@Autonomous(name = "Bi4W Autonomous", group = "Autonomous")
 public class Bi4W_Autonomous extends LinearOpMode {
+
+    private MecanumDrive drive;
 
     @Override
     public void runOpMode() {
-
-        newMecanumDrive drive =
-                new newMecanumDrive(this);
+        drive = new MecanumDrive(telemetry);
+        drive.init(hardwareMap);
 
         Bi4W_Manipulator manipulator = new Bi4W_Manipulator();
 
-        drive.init(hardwareMap);
-
-        manipulator.init(hardwareMap);
-
-        telemetry.addLine("Ready");
+        telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        IMU imu;
-
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot revHubOrientationOnRobot =
-                new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
-
-        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
-
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (opModeIsActive()) {
+            // Step 1: Reset IMU heading zero-point
+            drive.resetHeading();
 
-        imu.resetYaw();
+            manipulator.setIntakeSpeed(1.0);
 
-        manipulator.setIntakeSpeed(100);
+            driveForward(24, 1.0);
 
-        drive.driveDistance(
-                24,
-                0,
-                0
-        );
+            turnToHeading(90, 0.3);
 
+            driveForward(72, 1.0);
 
-        drive.turnTo(-90);
+            turnToHeading(0,0.3);
 
-        drive.driveDistance(
-                72,
-                0,
-                -90
-        );
+            driveForward(24, 0);
 
-        drive.turnTo(0);
+            turnToHeading(90, 0.3);
 
-        drive.driveDistance(
-                24,
-                0,
-                0
-        );
+            driveForward(48, 1.0);
 
-        drive.turnTo(90);
+            turnToHeading(180, 0.3);
 
-        drive.driveDistance(
-                48,
-                0,
-                90
-        );
+            driveForward(48, 1.0);
 
-        drive.turnTo(180);
+            turnToHeading(270, 0.3);
 
-        drive.driveDistance(
-                48,
-                0,
-                180
-        );
+            driveForward(120, 1.0);
 
-        drive.turnTo(270);
+            turnToHeading(0, 0.3);
 
-        drive.driveDistance(
-                120,
-                0,
-                270
-        );
+            driveForward(48, 1.0);
 
-        drive.turnTo(0);
+            turnToHeading(90, 0.3);
 
-        drive.driveDistance(
-                48,
-                0,
-                0
-        );
+            driveForward(72, 1.0);
 
-        drive.turnTo(90);
+            manipulator.setIntakeSpeed(0.0);
 
-        drive.driveDistance(
-                100,
-                0,
-                90
-        );
+            // Stop robot at the end of the autonomous period
+            drive.stop();
+        }
+    }
 
-        manipulator.setIntakeSpeed(0);
+    private void driveForward(double inches, double power) {
+        drive.driveEncoder(inches, power);
 
+        while (opModeIsActive() && drive.isBusy()) {
+            telemetry.addData("Status", "Driving Forward");
+            telemetry.addData("Target Inches", inches);
+            telemetry.update();
+        }
 
+        drive.stop();
+        sleep(250); // Pause briefly between movements
+    }
+
+    private void turnToHeading(double targetAngle, double power) {
+        double error = targetAngle - drive.getHeading();
+
+        // Simple P-loop turn using IMU reading
+        while (opModeIsActive() && Math.abs(error) > 1.5) {
+            error = targetAngle - drive.getHeading();
+
+            // Determine turn direction: positive turn power rotates counter-clockwise
+            double turnPower = Math.signum(error) * power;
+            drive.drive(0, 0, turnPower);
+
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Current Heading", drive.getHeading());
+            telemetry.addData("Error", error);
+            telemetry.update();
+        }
+
+        drive.stop();
+        sleep(250);
     }
 }
