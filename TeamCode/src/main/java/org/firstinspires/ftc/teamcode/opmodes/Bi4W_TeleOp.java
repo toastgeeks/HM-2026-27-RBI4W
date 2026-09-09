@@ -33,17 +33,12 @@ public class Bi4W_TeleOp extends OpMode {
 
     private void driveFieldRelative(double forward, double right, double rotate) {
         double robotAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        //convert to polar
-        double theta = Math.atan2(forward, right);
-        double r = Math.hypot(forward, right);
-        //rotate angle
-        theta = AngleUnit.normalizeRadians(theta - robotAngle);
 
-        //convert back to cartesian
-        double newForward = r * Math.sin(theta);
-        double newRight = r * Math.cos(theta);
+        // Standard 2D vector rotation relative to field origin
+        double rotatedRight = right * Math.cos(-robotAngle) - forward * Math.sin(-robotAngle);
+        double rotatedForward = right * Math.sin(-robotAngle) + forward * Math.cos(-robotAngle);
 
-        drive.drive(newForward, newRight, rotate);
+        drive.drive(rotatedForward, rotatedRight, rotate);
     }
 
     @Override
@@ -56,13 +51,15 @@ public class Bi4W_TeleOp extends OpMode {
 
         manipulator.setIntakeSpeed(gamepad1.right_trigger);
 
+        manipulator.setIntakeSpeed(gamepad1.left_trigger * -1);
+
         telemetry.addData("Intake speed", gamepad1.right_trigger);
 
         double armControl = gamepad2.right_trigger - gamepad2.left_trigger;
         manipulator.controlLift(armControl, telemetry);
 
         if (gamepad2.a) {
-            servo.setServoPosition(0.5);
+            servo.setServoPosition(0.35);
         }
         else{
             servo.setServoPosition(0.0);
@@ -73,6 +70,10 @@ public class Bi4W_TeleOp extends OpMode {
         }
         else {
             drive.maxSpeed = 1;
+        }
+
+        if (gamepad1.dpad_up) {
+            imu.resetYaw();
         }
 
 

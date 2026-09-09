@@ -38,22 +38,24 @@ public class MecanumDrive {
     }
 
     private void setPowers(double fleftPower, double frightPower, double bleftPower, double brightPower) {
-        maxSpeed = Math.max(maxSpeed, Math.abs(fleftPower));
-        maxSpeed = Math.max(maxSpeed, Math.abs(frightPower));
-        maxSpeed = Math.max(maxSpeed, Math.abs(bleftPower));
-        maxSpeed = Math.max(maxSpeed, Math.abs(brightPower));
+        // Find the max power requested across all wheels
+        double max = Math.max(Math.abs(fleftPower), Math.abs(frightPower));
+        max = Math.max(max, Math.abs(bleftPower));
+        max = Math.max(max, Math.abs(brightPower));
 
-        fleftPower /= maxSpeed;
-        frightPower /= maxSpeed;
-        bleftPower /= maxSpeed;
-        brightPower /= maxSpeed;
+        // Normalize powers if any motor exceeds 1.0
+        if (max > 1.0) {
+            fleftPower /= max;
+            frightPower /= max;
+            bleftPower /= max;
+            brightPower /= max;
+        }
 
-        fleft.setPower(fleftPower);
-        fright.setPower(frightPower);
-        bleft.setPower(bleftPower);
-        bright.setPower(brightPower);
-
-
+        // Apply global speed scaling (e.g., when lift is raised)
+        fleft.setPower(fleftPower * maxSpeed);
+        fright.setPower(frightPower * maxSpeed);
+        bleft.setPower(bleftPower * maxSpeed);
+        bright.setPower(brightPower * maxSpeed);
     }
 
     public void drive(double forward, double right, double rotate) {

@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Bi4W_Manipulator {
     public DcMotor intake;
     private int MIN_TICKS = 0;
-    private static int MAX_TICKS = 3000;
+    private static int MAX_TICKS = 4000;
     private double NUDGE_POWER = 0.5;
-    private double RUN_TO_POSITION_POWER = 0.98;
+    private double RUN_TO_POSITION_POWER = 1;
     private DcMotorEx liftMotor;
     public int targetLiftTicks = 0;
 
@@ -83,7 +83,7 @@ public class Bi4W_Manipulator {
         if ((control < 0.05) && (control > -0.05)) {  //no active input
             // No trigger: HOLD position
             //liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            liftMotor.setPower(0.2);
+            liftMotor.setPower(0.6);
             liftMotor.setTargetPosition(liftMotor.getCurrentPosition());
         } else {
             if (control < -0.05) {

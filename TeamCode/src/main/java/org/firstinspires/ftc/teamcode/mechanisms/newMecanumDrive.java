@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class newMecanumDrive {
 
     private final Telemetry telemetry;
+    private final LinearOpMode opMode;
 
     private DcMotor fleft;
     private DcMotor fright;
@@ -18,6 +20,7 @@ public class newMecanumDrive {
     private DcMotor bright;
 
     private IMU imu;
+    public double maxSpeed = 1.0;
 
 
     // ENCODER CONSTANTS
@@ -52,8 +55,9 @@ public class newMecanumDrive {
     private static final double MIN_DRIVE_POWER = 0.15;
     private static final double MIN_TURN_POWER = 0.15;
 
-    public newMecanumDrive(Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public newMecanumDrive(LinearOpMode opMode) {
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
     }
     // INITIALIZATION
 
@@ -150,35 +154,25 @@ public class newMecanumDrive {
     // BASIC MOTOR CONTROL
     // ============================================================
 
-    private void setPowers(
-            double fleftPower,
-            double frightPower,
-            double bleftPower,
-            double brightPower) {
+    private void setPowers(double fleftPower, double frightPower, double bleftPower, double brightPower) {
+        // Find the max power requested across all wheels
+        double max = Math.max(Math.abs(fleftPower), Math.abs(frightPower));
+        max = Math.max(max, Math.abs(bleftPower));
+        max = Math.max(max, Math.abs(brightPower));
 
-        double max = Math.max(
-                1.0,
-                Math.max(
-                        Math.abs(fleftPower),
-                        Math.max(
-                                Math.abs(frightPower),
-                                Math.max(
-                                        Math.abs(bleftPower),
-                                        Math.abs(brightPower)
-                                )
-                        )
-                )
-        );
+        // Normalize powers if any motor exceeds 1.0
+        if (max > 1.0) {
+            fleftPower /= max;
+            frightPower /= max;
+            bleftPower /= max;
+            brightPower /= max;
+        }
 
-        fleftPower /= max;
-        frightPower /= max;
-        bleftPower /= max;
-        brightPower /= max;
-
-        fleft.setPower(fleftPower);
-        fright.setPower(frightPower);
-        bleft.setPower(bleftPower);
-        bright.setPower(brightPower);
+        // Apply global speed scaling (e.g., when lift is raised)
+        fleft.setPower(fleftPower * maxSpeed);
+        fright.setPower(frightPower * maxSpeed);
+        bleft.setPower(bleftPower * maxSpeed);
+        bright.setPower(brightPower * maxSpeed);
     }
 
 
@@ -405,44 +399,23 @@ public class newMecanumDrive {
 
     public void turnTo(double targetHeading) {
 
-        while (true) {
+        while (opMode.opModeIsActive()) {
 
-            double error =
-                    angleError(
-                            targetHeading,
-                            getHeading()
-                    );
+            double error = angleError(targetHeading, getHeading());
 
-            // Stop when we're close enough
             if (Math.abs(error) < 1.0) {
                 break;
             }
 
-            double power =
-                    error * TURN_KP;
+            double power = error * TURN_KP;
 
-            // Don't let it be too small to move
+            // Limit maximum turning power
+            power = Math.max(-0.5, Math.min(0.5, power));
+
+            // Make sure the robot can actually overcome friction
             if (Math.abs(power) < MIN_TURN_POWER) {
-                power = Math.copySign(
-                        MIN_TURN_POWER,
-                        power
-                );
+                power = Math.copySign(MIN_TURN_POWER, power);
             }
-
-            // Don't exceed full power
-            power = Math.max(
-                    -1.0,
-                    Math.min(1.0, power)
-            );
-
-            /*
-             * Positive rotation:
-             *
-             * FL +
-             * FR -
-             * BL +
-             * BR -
-             */
 
             setPowers(
                     power,
@@ -451,21 +424,10 @@ public class newMecanumDrive {
                     -power
             );
 
-            telemetry.addData(
-                    "Target Heading",
-                    targetHeading
-            );
-
-            telemetry.addData(
-                    "Heading",
-                    getHeading()
-            );
-
-            telemetry.addData(
-                    "Error",
-                    error
-            );
-
+            telemetry.addData("Target Heading", targetHeading);
+            telemetry.addData("Heading", getHeading());
+            telemetry.addData("Error", error);
+            telemetry.addData("Turn Power", power);
             telemetry.update();
         }
 

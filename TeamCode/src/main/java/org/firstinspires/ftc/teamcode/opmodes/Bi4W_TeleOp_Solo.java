@@ -32,17 +32,12 @@ public class Bi4W_TeleOp_Solo extends OpMode {
 
     private void driveFieldRelative(double forward, double right, double rotate) {
         double robotAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        //convert to polar
-        double theta = Math.atan2(forward, right);
-        double r = Math.hypot(forward, right);
-        //rotate angle
-        theta = AngleUnit.normalizeRadians(theta - robotAngle);
 
-        //convert back to cartesian
-        double newForward = r * Math.sin(theta);
-        double newRight = r * Math.cos(theta);
+        // Standard 2D vector rotation relative to field origin
+        double rotatedRight = right * Math.cos(-robotAngle) - forward * Math.sin(-robotAngle);
+        double rotatedForward = right * Math.sin(-robotAngle) + forward * Math.cos(-robotAngle);
 
-        drive.drive(newForward, newRight, rotate);
+        drive.drive(rotatedForward, rotatedRight, rotate);
     }
 
     @Override
@@ -61,9 +56,11 @@ public class Bi4W_TeleOp_Solo extends OpMode {
         manipulator.controlLift(armControl, telemetry);
 
         if (gamepad1.a) {
-            servo.setServoPosition(0.5);
+            servo.setServoPosition(0.35);
         }
-        else{
+
+
+        if (gamepad1.b){
             servo.setServoPosition(0.0);
         }
 
@@ -72,6 +69,10 @@ public class Bi4W_TeleOp_Solo extends OpMode {
         }
         else {
             drive.maxSpeed = 1;
+        }
+
+        if (gamepad1.dpad_up) {
+            imu.resetYaw();
         }
 
 
