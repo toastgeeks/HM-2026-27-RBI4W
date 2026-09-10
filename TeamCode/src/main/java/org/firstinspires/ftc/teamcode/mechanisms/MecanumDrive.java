@@ -22,7 +22,7 @@ public class MecanumDrive {
     // Adjust these constants based on your robot's physical specs:
     // (Ticks per revolution * Gear Ratio) / (Wheel Diameter * Math.PI)
     public static final double TICKS_PER_REV = 537.7; // Example: GoBILDA 312 RPM Yellowjacket
-    public static final double WHEEL_DIAMETER_INCHES = 4.094488; // 96mm wheels
+    public static final double WHEEL_DIAMETER_INCHES = 4.094488; // 104mm wheels
     public static final double TICKS_PER_INCH = TICKS_PER_REV / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     public MecanumDrive(Telemetry telemetry) {

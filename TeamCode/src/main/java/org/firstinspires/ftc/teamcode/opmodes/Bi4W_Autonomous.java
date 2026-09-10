@@ -46,7 +46,7 @@ public class Bi4W_Autonomous extends LinearOpMode {
 
             driveForward(48, 1.0);
 
-            turnToHeading(270, 0.3);
+            turnToHeading(-90, 0.3);
 
             driveForward(120, 1.0);
 
