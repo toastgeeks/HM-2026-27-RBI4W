@@ -13,6 +13,9 @@ public class Bi4W_TeleOp extends OpMode {
     Bi4W_Manipulator manipulator = new Bi4W_Manipulator();
     Bi4W_servo servo = new Bi4W_servo();
 
+    private boolean fieldRelative = true;
+    private boolean last_dpad_right = false;
+
     @Override
     public void init() {
         drive.init(hardwareMap);
@@ -39,16 +42,28 @@ public class Bi4W_TeleOp extends OpMode {
 
     @Override
     public void loop() {
+        boolean currentB = gamepad1.dpad_right;
+
+        if (currentB && !last_dpad_right) {
+            fieldRelative = !fieldRelative;
+        }
+
+        last_dpad_right = currentB;
         double forward = -gamepad1.left_stick_y;
         double right = gamepad1.left_stick_x;
         double rotate = gamepad1.right_stick_x;
 
-        driveFieldRelative(forward, right, rotate);
+        if (fieldRelative) {
+            driveFieldRelative(forward, right, rotate);
+        } else {
+            drive.drive(forward, right, rotate);
+        }
 
         manipulator.setIntakeSpeed(gamepad1.right_trigger - gamepad1.left_trigger);
 
 
         telemetry.addData("Intake speed", gamepad1.right_trigger);
+        telemetry.addData("Drive Mode", fieldRelative ? "FIELD RELATIVE" : "BOT RELATIVE");
 
         double armControl = gamepad2.right_trigger - gamepad2.left_trigger;
         manipulator.controlLift(armControl, telemetry);
