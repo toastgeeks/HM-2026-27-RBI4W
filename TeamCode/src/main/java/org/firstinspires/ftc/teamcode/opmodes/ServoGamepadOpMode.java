@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.ProgammingBoard5;
 
 
 @TeleOp()
+@Disabled
 public class ServoGamepadOpMode extends OpMode {
     ProgammingBoard5 board = new ProgammingBoard5();
     @Override

@@ -29,6 +29,7 @@ public class Bi4W_TeleOp extends OpMode {
         servo.init(hardwareMap);
 
         manipulator.init(hardwareMap);
+        imu.resetYaw();
     }
 
     private void driveFieldRelative(double forward, double right, double rotate) {

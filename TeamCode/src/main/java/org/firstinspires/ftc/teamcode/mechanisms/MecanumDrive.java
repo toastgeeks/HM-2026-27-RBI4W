@@ -61,10 +61,10 @@ public class MecanumDrive {
         bleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        fleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double getHeading() {
