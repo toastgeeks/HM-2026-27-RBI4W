@@ -26,39 +26,73 @@ public class Bi4W_Autonomous extends LinearOpMode {
             // Step 1: Reset IMU heading zero-point
             drive.resetHeading();
 
+            manipulator.init(hardwareMap);
+
             manipulator.setIntakeSpeed(1.0);
 
-            driveForward(24, 1.0);
+            // 333 ms = 24 inches
+            drive.driveForward(2200);
 
-            turnToHeading(90, 0.3);
+            drive.driveBackward(100);
 
-            driveForward(72, 1.0);
+            drive.leftTurn(350);
 
-            turnToHeading(0,0.3);
+            drive.driveForward(333);
 
-            driveForward(24, 0);
+            drive.leftTurn(350);
 
-            turnToHeading(90, 0.3);
+            drive.driveForward(2200);
 
-            driveForward(48, 1.0);
+            drive.driveBackward(100);
 
-            turnToHeading(180, 0.3);
+            drive.rightTurn(350);
 
-            driveForward(48, 1.0);
+            drive.driveForward(333);
 
-            turnToHeading(-90, 0.3);
+            drive.rightTurn(350);
 
-            driveForward(120, 1.0);
+            drive.driveForward(2200);
 
-            turnToHeading(0, 0.3);
+            drive.driveBackward(100);
 
-            driveForward(48, 1.0);
+            drive.leftTurn(350);
 
-            turnToHeading(90, 0.3);
+            drive.driveForward(333);
 
-            driveForward(72, 1.0);
+            drive.leftTurn(350);
 
-            manipulator.setIntakeSpeed(0.0);
+            drive.driveForward(2200);
+
+            drive.driveBackward(100);
+
+
+//           driveForward(72, 0.5);
+
+//           turnToHeading(0,0.3);
+
+//           driveForward(24, 0);
+
+//           turnToHeading(90, 0.3)e;
+
+//           driveForward(48, 1.0)e;
+
+//           turnToHeading(180, 0.3)e;
+
+//           driveForward(48, 1.0)e;
+
+//           turnToHeading(-90, 0.3)e;
+
+//           driveForward(120, 1.0)e;
+
+//           turnToHeading(0, 0.3)e;
+
+//           driveForward(48, 1.0)e;
+
+//           turnToHeading(90, 0.3)e;
+
+//           driveForward(72, 1.0);
+
+           manipulator.setIntakeSpeed(0.0);
 
             // Stop robot at the end of the autonomous period
             drive.stop();
@@ -74,15 +108,16 @@ public class Bi4W_Autonomous extends LinearOpMode {
             telemetry.update();
         }
 
-        drive.stop();
-        sleep(250); // Pause briefly between movements
+        //drive.stop();
+        //sleep(250); // Pause briefly between movements
     }
 
     private void turnToHeading(double targetAngle, double power) {
+        targetAngle *= -1;
         double error = targetAngle - drive.getHeading();
 
         // Simple P-loop turn using IMU reading
-        while (opModeIsActive() && Math.abs(error) > 1.5) {
+        while (opModeIsActive() && Math.abs(error) > 3.0) {
             error = targetAngle - drive.getHeading();
 
             // Determine turn direction: positive turn power rotates counter-clockwise
@@ -94,9 +129,6 @@ public class Bi4W_Autonomous extends LinearOpMode {
             telemetry.addData("Error", error);
             telemetry.update();
         }
-
-        drive.stop();
-        sleep(250);
     }
 }
 //wakeo was here!

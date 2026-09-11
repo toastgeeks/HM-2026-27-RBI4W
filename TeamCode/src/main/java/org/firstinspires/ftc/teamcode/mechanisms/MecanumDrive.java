@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -47,8 +48,8 @@ public class MecanumDrive {
         imu = hardwareMap.get(IMU.class, "imu");
 
         // Define hub orientation (Update these according to how your REV Hub is mounted)
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
@@ -73,6 +74,72 @@ public class MecanumDrive {
 
     public void resetHeading() {
         imu.resetYaw();
+    }
+
+    public void driveForward(double millis) {
+        fleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < millis * 3.03) {
+            double slowdown = 0.66;
+            fleft.setPower(0.5 * slowdown);
+            fright.setPower(0.46 * slowdown);
+            bleft.setPower(0.5 * slowdown);
+            bright.setPower(0.46 * slowdown);
+        }
+
+    }
+
+    public void driveBackward(double millis) {
+        fleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < millis * 3.03) {
+            double slowdown = 0.66;
+            fleft.setPower(-0.5 * slowdown);
+            fright.setPower(-0.46 * slowdown);
+            bleft.setPower(-0.5 * slowdown);
+            bright.setPower(-0.46 * slowdown);
+        }
+
+    }
+
+    public void rightTurn(double millis) {
+        fleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < millis) {
+            fleft.setPower(1);
+            fright.setPower(-1);
+            bleft.setPower(1);
+            bright.setPower(-1);
+        }
+
+    }
+
+    public void leftTurn(double millis) {
+        fleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < millis) {
+            fleft.setPower(-1);
+            fright.setPower(1);
+            bleft.setPower(-1);
+            bright.setPower(1);
+        }
+
     }
 
     // Drive forward/backward using encoders
@@ -104,21 +171,10 @@ public class MecanumDrive {
     }
 
     private void setPowers(double fleftPower, double frightPower, double bleftPower, double brightPower) {
-        double max = Math.max(Math.abs(fleftPower), Math.abs(frightPower));
-        max = Math.max(max, Math.abs(bleftPower));
-        max = Math.max(max, Math.abs(brightPower));
-
-        if (max > 1.0) {
-            fleftPower /= max;
-            frightPower /= max;
-            bleftPower /= max;
-            brightPower /= max;
-        }
-
-        fleft.setPower(fleftPower * maxSpeed);
-        fright.setPower(frightPower * maxSpeed);
-        bleft.setPower(bleftPower * maxSpeed);
-        bright.setPower(brightPower * maxSpeed);
+        fleft.setPower(fleftPower);
+        fright.setPower(frightPower);
+        bleft.setPower(bleftPower);
+        bright.setPower(brightPower);
     }
 
     public void drive(double forward, double right, double rotate) {

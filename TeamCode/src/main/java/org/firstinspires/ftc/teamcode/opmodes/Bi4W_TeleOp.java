@@ -49,9 +49,8 @@ public class Bi4W_TeleOp extends OpMode {
 
         driveFieldRelative(forward, right, rotate);
 
-        manipulator.setIntakeSpeed(gamepad1.right_trigger);
+        manipulator.setIntakeSpeed(gamepad1.right_trigger - gamepad1.left_trigger);
 
-        manipulator.setIntakeSpeed(gamepad1.left_trigger * -1);
 
         telemetry.addData("Intake speed", gamepad1.right_trigger);
 
@@ -80,4 +79,4 @@ public class Bi4W_TeleOp extends OpMode {
     }
 
 }
-//wakeo was here
+//wakeo was here and thatKerbal noticed
