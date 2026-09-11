@@ -178,10 +178,10 @@ public class MecanumDrive {
     }
 
     public void drive(double forward, double right, double rotate) {
-        double fleftPower = forward + right + rotate;
-        double frightPower = forward - right - rotate;
-        double bleftPower = forward - right + rotate;
-        double brightPower = forward + right - rotate;
+        double fleftPower = (forward + right + rotate) * maxSpeed;
+        double frightPower = (forward - right - rotate) * maxSpeed;
+        double bleftPower = (forward - right + rotate) * maxSpeed;
+        double brightPower = (forward + right - rotate) * maxSpeed;
 
         setPowers(fleftPower, frightPower, bleftPower, brightPower);
 
