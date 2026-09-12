@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator;
+import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_servo;
 
 @Autonomous(name = "Bi4W Autonomous", group = "Autonomous")
 public class Bi4W_Autonomous extends LinearOpMode {
@@ -13,7 +14,9 @@ public class Bi4W_Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         drive = new MecanumDrive(telemetry);
+        Bi4W_servo servo = new Bi4W_servo();
         drive.init(hardwareMap);
+        servo.init(hardwareMap);
 
         Bi4W_Manipulator manipulator = new Bi4W_Manipulator();
 
@@ -31,39 +34,51 @@ public class Bi4W_Autonomous extends LinearOpMode {
             manipulator.setIntakeSpeed(1.0);
 
             // 333 ms = 24 inches
-            drive.driveForward(2200);
+            drive.driveForward(2400);
 
             drive.driveBackward(100);
 
-            drive.leftTurn(350);
+            drive.leftTurn(400);
 
             drive.driveForward(333);
 
-            drive.leftTurn(350);
+            drive.leftTurn(380);
 
-            drive.driveForward(2200);
+            drive.driveForward(1000);
 
-            drive.driveBackward(100);
+            manipulator.setIntakeSpeed(0);
 
-            drive.rightTurn(350);
+            drive.leftTurn(380);
 
-            drive.driveForward(333);
+            drive.driveForward(400);
 
-            drive.rightTurn(350);
+            drive.rightTurn(380);
 
-            drive.driveForward(2200);
+            drive.driveForward(800);
 
-            drive.driveBackward(100);
+            drive.leftTurn(380);
 
-            drive.leftTurn(350);
+            drive.driveBackward(400);
 
-            drive.driveForward(333);
+            drive.rightTurn(380);
 
-            drive.leftTurn(350);
+            drive.driveBackward(1300);
 
-            drive.driveForward(2200);
+            servo.setServoPosition(0.35);
 
-            drive.driveBackward(100);
+            sleep(500);
+
+            servo.setServoPosition(0.0);
+
+
+
+
+
+
+
+
+
+
 
 
 //           driveForward(72, 0.5);
@@ -92,7 +107,6 @@ public class Bi4W_Autonomous extends LinearOpMode {
 
 //           driveForward(72, 1.0);
 
-           manipulator.setIntakeSpeed(0.0);
 
             // Stop robot at the end of the autonomous period
             drive.stop();
