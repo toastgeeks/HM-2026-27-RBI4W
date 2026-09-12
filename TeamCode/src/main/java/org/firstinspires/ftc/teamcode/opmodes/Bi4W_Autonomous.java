@@ -64,11 +64,20 @@ public class Bi4W_Autonomous extends LinearOpMode {
 
             drive.driveBackward(1300);
 
-            servo.setServoPosition(0.35);
+            manipulator.setIntakeSpeed(1.0);
 
-            sleep(500);
+            drive.driveForward(100);
 
-            servo.setServoPosition(0.0);
+            drive.rightTurn(380);
+
+            drive.driveForward(300);
+
+            drive.leftTurn(380);
+
+            drive.driveForward(900);
+
+            manipulator.setIntakeSpeed(0.0);
+
 
 
 

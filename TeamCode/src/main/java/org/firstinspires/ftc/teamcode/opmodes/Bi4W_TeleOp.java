@@ -6,11 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator;
 import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_servo;
-
+import org.firstinspires.ftc.teamcode.mechanisms.Bi4W_Manipulator_solo;
 @TeleOp()
 public class Bi4W_TeleOp extends OpMode {
     MecanumDrive drive = new MecanumDrive(telemetry);
     Bi4W_Manipulator manipulator = new Bi4W_Manipulator();
+    Bi4W_Manipulator_solo manipulatorSolo = new Bi4W_Manipulator_solo();
     Bi4W_servo servo = new Bi4W_servo();
 
     private boolean fieldRelative = true;
@@ -24,6 +25,8 @@ public class Bi4W_TeleOp extends OpMode {
 
         manipulator.init(hardwareMap);
         drive.resetHeading();
+
+        manipulatorSolo.init(hardwareMap);
     }
 
     private void driveFieldRelative(double forward, double right, double rotate) {
@@ -59,7 +62,9 @@ public class Bi4W_TeleOp extends OpMode {
             drive.drive(forward, right, rotate);
         }
 
-        manipulator.setIntakeSpeed(gamepad1.right_trigger - gamepad1.left_trigger);
+        manipulator.setIntakeSpeed(gamepad1.right_trigger);
+
+        manipulatorSolo.setReverseIntakeSpeed(gamepad1.right_bumper);
 
 
         telemetry.addData("Intake speed", gamepad1.right_trigger);

@@ -49,8 +49,8 @@ public class Bi4W_Manipulator_solo {
        liftMotor.setPower(RUN_TO_POSITION_POWER);
    }
 
-    public void setIntakeSpeed(boolean intakeOn) {
-        intake.setPower(intakeOn ? 1.0 : 0.0);
+    public void setReverseIntakeSpeed(boolean intakeOn) {
+        intake.setPower(intakeOn ? -1.0 : 0.0);
     }
 
     public void setTargetPercentage(int percent){
